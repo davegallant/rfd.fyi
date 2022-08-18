@@ -1,5 +1,11 @@
 <template>
   <body>
+    <input
+      class="form-control bg-dark text-light"
+      type="text"
+      placeholder="Search"
+      v-model="filter"
+    />
     <table class="table table-dark table-hover">
       <thead>
         <tr>
@@ -17,13 +23,17 @@
           :is-full-page="false"
         >
         </loading>
-        <tr scope="row" v-for="topic in topics" :key="topic.topic_id">
+        <tr
+          scope="row"
+          v-for="(topic, index) in filteredTopics"
+          :key="`topic.topic_id-${index}`"
+        >
           <td scope="col">
             <a
-              :href="'https://forums.redflagdeals.com' + topic.web_path"
+              href="'https://forums.redflagdeals.com' + topic.web_path"
               target="_blank"
-              >{{ topic.title }}</a
-            >
+              v-html="highlightMatches(topic.title)"
+            ></a>
           </td>
           <td scope="col">{{ topic.total_views }}</td>
           <td scope="col">{{ formatDate(topic.last_post_time) }}</td>
@@ -44,6 +54,7 @@ export default {
     return {
       topics: [],
       isLoading: false,
+      filter: "",
     };
   },
   mounted() {
@@ -63,6 +74,24 @@ export default {
     formatDate() {
       return (v) => {
         return moment(String(v)).format("hh:mm A z (MM/DD)");
+      };
+    },
+    filteredTopics() {
+      return this.topics.filter((row) => {
+        const titles = row.title.toString().toLowerCase();
+        const searchTerm = this.filter.toLowerCase();
+
+        return titles.includes(searchTerm);
+      });
+    },
+    highlightMatches() {
+      return (v) => {
+        if (this.filter == "") return v;
+        const matchExists = v.toLowerCase().includes(this.filter.toLowerCase());
+        if (!matchExists) return v;
+
+        const re = new RegExp(this.filter, "ig");
+        return v.replace(re, (matchedText) => `<mark>${matchedText}</mark>`);
       };
     },
   },
