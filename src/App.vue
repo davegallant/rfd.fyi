@@ -5,9 +5,10 @@
       type="text"
       placeholder="Search"
       v-model="filter"
+      ref="search"
     />
     <table class="table table-dark table-hover">
-      <thead>
+      <thead class="thead thead-light text-muted">
         <tr>
           <th scope="col">Deal</th>
           <th scope="col">Views</th>
@@ -47,6 +48,8 @@
 import axios from "axios";
 import moment from "moment";
 import Loading from "vue-loading-overlay";
+import Mousetrap from "mousetrap";
+
 import "vue-loading-overlay/dist/vue-loading.css";
 
 export default {
@@ -68,6 +71,12 @@ export default {
       .catch((err) => {
         console.log(err.response);
       });
+    Mousetrap.bind("/", this.focusSearch);
+  },
+  methods: {
+    focusSearch() {
+      this.$refs.search.focus();
+    },
   },
   props: ["date"],
   computed: {
