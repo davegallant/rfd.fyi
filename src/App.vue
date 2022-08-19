@@ -62,20 +62,24 @@ export default {
   },
   mounted() {
     this.isLoading = true;
-    axios
-      .get("http://localhost:8081/api/v1/topics")
-      .then((response) => {
-        this.topics = response.data;
-        this.isLoading = false;
-      })
-      .catch((err) => {
-        console.log(err.response);
-      });
-    Mousetrap.bind("/", this.focusSearch);
+    this.fetchDeals();
+    Mousetrap.bind("/", this.focusSearch, "keyup");
+    Mousetrap.bind("r", this.loadDeals);
   },
   methods: {
     focusSearch() {
       this.$refs.search.focus();
+    },
+    fetchDeals() {
+      axios
+        .get("http://localhost:8081/api/v1/topics")
+        .then((response) => {
+          this.topics = response.data;
+          this.isLoading = false;
+        })
+        .catch((err) => {
+          console.log(err.response);
+        });
     },
   },
   props: ["date"],
