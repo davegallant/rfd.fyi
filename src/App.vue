@@ -31,7 +31,7 @@
         >
           <td scope="col">
             <a
-              href="'https://forums.redflagdeals.com' + topic.web_path"
+              :href="`https://forums.redflagdeals.com${topic.web_path}`"
               target="_blank"
               v-html="highlightMatches(topic.title)"
             ></a>

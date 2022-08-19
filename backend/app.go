@@ -101,24 +101,28 @@ func (a *App) refreshDeals() {
 
 func (a *App) getDeals(id int, firstPage int, lastPage int) []Topic {
 
-	// TODO: Fetch multiple pages
-	requestURL := fmt.Sprintf("https://forums.redflagdeals.com/api/topics?forum_id=%d&per_page=40&page=%d", id, firstPage)
-	res, err := http.Get(requestURL)
-	if err != nil {
-		log.Warn().Msgf("error fetching deals: %s\n", err)
+	var t []Topic
+
+	for i := firstPage; i < lastPage; i++ {
+		requestURL := fmt.Sprintf("https://forums.redflagdeals.com/api/topics?forum_id=%d&per_page=40&page=%d", id, i)
+		res, err := http.Get(requestURL)
+		if err != nil {
+			log.Warn().Msgf("error fetching deals: %s\n", err)
+		}
+		body, err := ioutil.ReadAll(res.Body)
+		if err != nil {
+			log.Warn().Msgf("could not read response body: %s\n", err)
+		}
+
+		var response TopicsResponse
+
+		err = json.Unmarshal([]byte(body), &response)
+
+		if err != nil {
+			log.Warn().Msgf("could not unmarshal response body: %s\n", err)
+		}
+
+		t = append(t, response.Topics...)
 	}
-	body, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		log.Warn().Msgf("could not read response body: %s\n", err)
-	}
-
-	var response TopicsResponse
-
-	err = json.Unmarshal([]byte(body), &response)
-
-	if err != nil {
-		log.Warn().Msgf("could not unmarshal response body: %s\n", err)
-	}
-
-	return response.Topics
+	return t
 }
