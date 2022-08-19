@@ -65,6 +65,7 @@ export default {
     this.fetchDeals();
     Mousetrap.bind("/", this.focusSearch, "keyup");
     Mousetrap.bind("r", this.loadDeals);
+    this.interval = setInterval(() => this.fetchDeals(), 10000);
   },
   methods: {
     focusSearch() {
