@@ -5,8 +5,6 @@ import (
 
 	_ "github.com/joho/godotenv/autoload"
 
-	_ "github.com/jinzhu/gorm/dialects/sqlite"
-
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 
@@ -33,19 +31,9 @@ func main() {
 
 	a := &App{}
 
-	dbType := utils.GetEnv("DB_TYPE", "sqlite3")
-
 	httpPort := utils.GetEnv("HTTP_PORT", "8080")
-	sqlitePath := utils.GetEnv("SQLITE_DB_PATH", "rfd.db")
 
-	// Determine database
-	switch {
-	case dbType == "sqlite3":
-		log.Debug().Msgf("Using sqlite3 (path: " + sqlitePath + ")")
-		a.Initialize(dbType, sqlitePath)
-	default:
-		log.Fatal().Msgf("Unsupported database: " + dbType)
-	}
+	a.Initialize()
 
 	a.Run(httpPort)
 }

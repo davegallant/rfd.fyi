@@ -10,8 +10,6 @@ import (
 	"github.com/rs/zerolog/log"
 
 	"github.com/gorilla/mux"
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
 
 // @title           RFD FYI API
@@ -30,20 +28,13 @@ import (
 // @BasePath  /api/v1
 
 type App struct {
-	DB       *gorm.DB
-	Router   *mux.Router
-	BasePath string
+	Router        *mux.Router
+	BasePath      string
+	CurrentTopics []Topic
 }
 
-func (a *App) Initialize(dbDriver string, dbURI string) {
-	db, err := gorm.Open(dbDriver, dbURI)
-	if err != nil {
-		panic("failed to connect database")
-	}
-	a.DB = db
+func (a *App) Initialize() {
 	a.BasePath = "/api/v1"
-
-	a.DB.AutoMigrate(&Topic{})
 
 	a.Router = mux.NewRouter().PathPrefix(a.BasePath).Subrouter()
 	http.Handle("/", a.Router)
@@ -56,7 +47,6 @@ func (a *App) Run(httpPort string) {
 	if err := http.ListenAndServe(fmt.Sprintf(":"+httpPort), nil); err != nil {
 		panic(err)
 	}
-	defer a.DB.Close()
 }
 
 func (a *App) initializeRoutes() {
@@ -84,20 +74,14 @@ func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
 func (a *App) listTopics(w http.ResponseWriter, r *http.Request) {
 	var topics []Topic
 	a.refreshDeals()
-	a.DB.Find(&topics)
 	respondWithJSON(w, http.StatusOK, topics)
 }
 
 func (a *App) refreshDeals() {
-	topics := a.getDeals(9, 1, 10)
-	// only drop deals if a timer has been met
-	log.Debug().Msg("Dropping deals")
-	a.DB.DropTable(&Topic{})
-	log.Debug().Msg("Refreshing the deals")
-	a.DB.CreateTable(&Topic{})
-	for _, topic := range topics {
-		a.DB.Create(topic)
-	}
+	latestTopics := a.getDeals(9, 1, 4)
+	// TODO: only drop deals if a timer has been met
+	log.Debug().Msg("Refreshing deals")
+	a.CurrentTopics = latestTopics
 }
 
 func (a *App) getDeals(id int, firstPage int, lastPage int) []Topic {

@@ -38,6 +38,7 @@
             ></a>
           </td>
           <td scope="col">{{ topic.total_views }}</td>
+          <td scope="col">{{ topic.score }}</td>
           <!-- <td scope="col">{{ topic.votes.up - topic.votes.down }}</td> -->
           <td scope="col">{{ formatDate(topic.last_post_time) }}</td>
         </tr>
