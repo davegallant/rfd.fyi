@@ -90,6 +90,7 @@ func (a *App) listTopics(w http.ResponseWriter, r *http.Request) {
 
 func (a *App) refreshDeals() {
 	topics := a.getDeals(9, 1, 10)
+	// only drop deals if a timer has been met
 	log.Debug().Msg("Dropping deals")
 	a.DB.DropTable(&Topic{})
 	log.Debug().Msg("Refreshing the deals")

@@ -12,6 +12,7 @@
         <tr>
           <th scope="col">Deal</th>
           <th scope="col">Views</th>
+          <th scope="col">Score</th>
           <th scope="col">Last Post</th>
         </tr>
       </thead>
@@ -37,6 +38,7 @@
             ></a>
           </td>
           <td scope="col">{{ topic.total_views }}</td>
+          <td scope="col">{{ topic.votes.up - topic.votes.down }}</td>
           <td scope="col">{{ formatDate(topic.last_post_time) }}</td>
         </tr>
       </tbody>
