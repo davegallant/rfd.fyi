@@ -10,11 +10,11 @@ COPY . .
 
 RUN yarn build
 
-FROM nginx:stable-alpine as production-stage
+FROM caddy:2.5.2-alpine as production-stage
 
-COPY --from=build-stage /app/dist /usr/share/nginx/html
+WORKDIR /my-site
 
-COPY nginx.conf /etc/nginx/
+COPY --from=build-stage /app/dist ./
 
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+COPY Caddyfile /etc/caddy/Caddyfile
+
