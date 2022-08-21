@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"time"
 
 	_ "github.com/joho/godotenv/autoload"
 	"github.com/rs/zerolog/log"
@@ -31,6 +32,7 @@ type App struct {
 	Router        *mux.Router
 	BasePath      string
 	CurrentTopics []Topic
+	LastRefresh   time.Time
 }
 
 func (a *App) Initialize() {
@@ -53,9 +55,9 @@ func (a *App) initializeRoutes() {
 	a.Router.HandleFunc("/topics", a.listTopics).Methods("GET")
 }
 
-func respondWithError(w http.ResponseWriter, code int, message string) {
-	respondWithJSON(w, code, map[string]string{"error": message})
-}
+// func respondWithError(w http.ResponseWriter, code int, message string) {
+// 	respondWithJSON(w, code, map[string]string{"error": message})
+// }
 
 func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
 	response, _ := json.Marshal(payload)
@@ -72,16 +74,20 @@ func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
 // @Router       /topics [get]
 // @Success 200 {array} Topic
 func (a *App) listTopics(w http.ResponseWriter, r *http.Request) {
-	var topics []Topic
-	a.refreshDeals()
-	respondWithJSON(w, http.StatusOK, topics)
+	if time.Since(a.LastRefresh).Minutes() > 1 {
+		a.refreshTopics()
+	} else {
+		log.Debug().Msg("Topics cache has not expired. Using existing.")
+	}
+	respondWithJSON(w, http.StatusOK, a.CurrentTopics)
 }
 
-func (a *App) refreshDeals() {
+func (a *App) refreshTopics() {
 	latestTopics := a.getDeals(9, 1, 4)
 	// TODO: only drop deals if a timer has been met
-	log.Debug().Msg("Refreshing deals")
+	log.Debug().Msg("Refreshing topics")
 	a.CurrentTopics = latestTopics
+	a.LastRefresh = time.Now()
 }
 
 func (a *App) getDeals(id int, firstPage int, lastPage int) []Topic {

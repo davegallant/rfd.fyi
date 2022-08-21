@@ -12,7 +12,8 @@
         <tr>
           <th scope="col">Deal</th>
           <th scope="col">Views</th>
-          <th scope="col">Score</th>
+          <!-- TODO:score  -->
+          <!-- <th scope="col">Score</th> -->
           <th scope="col">Last Post</th>
         </tr>
       </thead>
