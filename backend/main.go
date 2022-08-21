@@ -10,10 +10,10 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 
-	utils "github.com/davegallant/rfd-launcher/pkg/utils"
+	utils "github.com/davegallant/rfd-fyi/pkg/utils"
 )
 
-// @title           RFD Launcher API
+// @title           RFD FYI API
 // @version         1.0
 // @description     An API for an issue tracking service
 // @termsOfService  http://swagger.io/terms/

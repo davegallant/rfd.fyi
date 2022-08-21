@@ -14,7 +14,7 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
 
-// @title           RFD LAUNCHER API
+// @title           RFD FYI API
 // @version         1.0
 // @description     An API for issue tracking
 // @termsOfService  http://swagger.io/terms/

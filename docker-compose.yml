@@ -1,0 +1,15 @@
+version: "3.9"
+services:
+  frontend:
+    build:
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
+    links:
+      - "backend:backend"
+  backend:
+    build:
+      dockerfile: Dockerfile
+      context: backend
+    ports:
+      - 8080:8080

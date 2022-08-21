@@ -1,21 +1,20 @@
-# syntax=docker/dockerfile:1
-
-FROM golang:1.18-alpine
-
-# hadolint ignore=DL3018
-RUN apk --no-cache add \
-  gcc \
-  musl-dev
+FROM node:18-alpine3.16 as build-stage
 
 WORKDIR /app
 
-COPY backend/ .
+COPY package*.json ./
 
-RUN  CGO_ENABLED=1 GOOS=linux \
-    go build -o /rfd-fyi \
-    # Additional flags are necessary for sqlite support
-    -a -ldflags '-linkmode external -extldflags "-static"' .
+RUN yarn install
 
-EXPOSE 8080
+COPY . .
 
-CMD [ "/rfd-fyi" ]
+RUN yarn build
+
+FROM nginx:stable-alpine as production-stage
+
+COPY --from=build-stage /app/dist /usr/share/nginx/html
+
+COPY nginx.conf /etc/nginx/
+
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

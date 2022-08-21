@@ -1,4 +1,4 @@
-module github.com/davegallant/rfd-launcher
+module github.com/davegallant/rfd-fyi
 
 go 1.18
 

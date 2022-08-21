@@ -1,4 +1,4 @@
-# rfd-launcher
+# rfd-fyi
 
 ## Project setup
 ```

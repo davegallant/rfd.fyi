@@ -38,7 +38,7 @@
             ></a>
           </td>
           <td scope="col">{{ topic.total_views }}</td>
-          <td scope="col">{{ topic.votes.up - topic.votes.down }}</td>
+          <!-- <td scope="col">{{ topic.votes.up - topic.votes.down }}</td> -->
           <td scope="col">{{ formatDate(topic.last_post_time) }}</td>
         </tr>
       </tbody>
@@ -75,7 +75,7 @@ export default {
     },
     fetchDeals() {
       axios
-        .get("http://localhost:8081/api/v1/topics")
+        .get("api/v1/topics")
         .then((response) => {
           this.topics = response.data;
           this.isLoading = false;
