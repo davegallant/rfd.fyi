@@ -110,7 +110,7 @@ func (a *App) getDeals(id int, firstPage int, lastPage int) []Topic {
 		err = json.Unmarshal([]byte(body), &response)
 
 		if err != nil {
-			log.Warn().Msgf("could not unmarshal response body: %s\n", err)
+			log.Warn().Msgf("could not unmarshal response body: %s\n %s", err)
 		}
 
 		t = append(t, response.Topics...)
