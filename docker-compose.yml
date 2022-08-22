@@ -9,6 +9,8 @@ services:
       - 443:443
     links:
       - "backend:backend"
+    volumes:
+      - ./data:/data
   backend:
     build:
       dockerfile: Dockerfile
