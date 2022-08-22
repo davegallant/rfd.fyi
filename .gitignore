@@ -3,4 +3,3 @@ dist
 backend/bin/
 .vscode
 *.pem
-data/
