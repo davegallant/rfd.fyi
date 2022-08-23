@@ -1,4 +1,5 @@
 <template>
+  <link rel="shortcut icon" type="image/png" href="/static/favicon.png" />
   <body>
     <input
       class="form-control bg-dark text-light mousetrap"
