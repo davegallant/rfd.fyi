@@ -1,7 +1,7 @@
 <template>
   <body>
     <input
-      class="form-control bg-dark text-light"
+      class="form-control bg-dark text-light mousetrap"
       type="text"
       placeholder="Search"
       v-model="filter"
@@ -69,11 +69,15 @@ export default {
     this.fetchDeals();
     Mousetrap.bind("/", this.focusSearch, "keyup");
     Mousetrap.bind("r", this.loadDeals);
+    Mousetrap.bind("escape", this.blurSearch);
     this.interval = setInterval(() => this.fetchDeals(), 10000);
   },
   methods: {
     focusSearch() {
       this.$refs.search.focus();
+    },
+    blurSearch() {
+      this.$refs.search.blur();
     },
     fetchDeals() {
       axios
