@@ -4,6 +4,13 @@
 
 body {
   background-color: black;
+  max-width: 100%;
+}
+
+html {
+  background-color: #282828; /**/
+  color: #ebdbb2; /**/
+  min-width: 100%;
 }
 
 .thead {
@@ -162,10 +169,6 @@ h5,
 h6 {
   font-family: "PT Sans Narrow", sans-serif;
   font-weight: 700;
-}
-html {
-  background-color: #282828; /**/
-  color: #ebdbb2; /**/
 }
 body {
   background-color: #3c3836; /**/

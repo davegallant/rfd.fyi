@@ -13,13 +13,13 @@ help:
 	@echo
 .PHONY: help
 
-## backend-server: Build and run the backend from source
-backend-server:
+## backend: Build and run the backend from source
+backend:
 	@cd backend && go run .
 .PHONY: server
 
 
-## frontend-server: Build and run the frontend from source
-frontend-server:
+## frontend: Build and run the frontend from source
+frontend:
 	@npx vue-cli-service serve
 .PHONY: server
