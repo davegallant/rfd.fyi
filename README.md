@@ -1,24 +1,8 @@
 # rfd-fyi
 
-## Project setup
-```
-yarn install
-```
+## Dev
 
-### Compiles and hot-reloads for development
+```sh
+make frontend
+make backend
 ```
-yarn serve
-```
-
-### Compiles and minifies for production
-```
-yarn build
-```
-
-### Lints and fixes files
-```
-yarn lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
