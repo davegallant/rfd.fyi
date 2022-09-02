@@ -46,6 +46,25 @@
         </tr>
       </tbody>
     </table>
+    <footer class="fixed-bottom">
+      <div class="footer-left">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          value=""
+          id="flexCheckDefault"
+          checked
+          disabled
+        />
+        Auto-refresh
+      </div>
+
+      <div class="footer-right">
+        <github-button href="https://github.com/davegallant/rfd-fyi"
+          >Star</github-button
+        >
+      </div>
+    </footer>
   </body>
 </template>
 
@@ -54,6 +73,7 @@ import axios from "axios";
 import moment from "moment";
 import Loading from "vue-loading-overlay";
 import Mousetrap from "mousetrap";
+import GithubButton from "vue-github-button";
 
 import "vue-loading-overlay/dist/vue-loading.css";
 
@@ -120,6 +140,7 @@ export default {
   },
   components: {
     Loading,
+    GithubButton,
   },
 };
 </script>

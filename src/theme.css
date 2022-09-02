@@ -175,8 +175,24 @@ a {
   color: #83a598; /**/
 }
 a:visited {
-  color: #d65d0e; /**/
+  color: #53514f; /**/
 }
 a:hover {
   color: #d65d03; /**/
+}
+
+footer {
+  background: #282828;
+  color: white;
+  padding: 3px;
+  padding-right: 10px;
+  padding-left: 10px;
+}
+
+.footer-left {
+  float: left;
+}
+
+.footer-right {
+  float: right;
 }
