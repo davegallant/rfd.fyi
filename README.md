@@ -19,3 +19,15 @@ In another pane/tab, run:
 ```sh
 make frontend
 ```
+
+## Honeycomb
+
+Ensure that an .env is filled in with appropriate values.
+
+See [example.env](./example.env).
+
+## Docker Compose
+
+```sh
+make up
+```

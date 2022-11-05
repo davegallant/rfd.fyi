@@ -23,3 +23,9 @@ backend:
 frontend:
 	@npx vue-cli-service serve
 .PHONY: server
+
+## up: Build and run in docker compose
+up:
+	@if [ -e .env ]; then echo "Missing file: .env"; fi
+	docker compose up -d
+.PHONY: up

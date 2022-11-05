@@ -9,6 +9,9 @@ import (
 	"github.com/rs/zerolog/log"
 
 	utils "github.com/davegallant/rfd-fyi/pkg/utils"
+
+	_ "github.com/honeycombio/honeycomb-opentelemetry-go"
+	"github.com/honeycombio/opentelemetry-go-contrib/launcher"
 )
 
 // @title           RFD FYI API
@@ -28,6 +31,13 @@ import (
 
 func main() {
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
+
+	// use honeycomb distro to setup OpenTelemetry SDK
+	otelShutdown, err := launcher.ConfigureOpenTelemetry()
+	if err != nil {
+		log.Fatal().Msgf("error setting up OTel SDK - %e", err)
+	}
+	defer otelShutdown()
 
 	a := &App{}
 

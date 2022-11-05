@@ -4,3 +4,4 @@ data/
 backend/bin/
 .vscode
 *.pem
+.env
