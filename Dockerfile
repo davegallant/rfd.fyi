@@ -1,4 +1,4 @@
-FROM node:18-alpine3.16 as build-stage
+FROM node:18-alpine3.16 as builder
 
 WORKDIR /app
 
@@ -10,11 +10,11 @@ COPY . .
 
 RUN yarn build
 
-FROM caddy:2.5.2-alpine as production-stage
+FROM caddy:2.6.2-alpine as runtime
 
 WORKDIR /my-site
 
-COPY --from=build-stage /app/dist ./
+COPY --from=builder /app/dist ./
 
 COPY Caddyfile /etc/caddy/Caddyfile
 
