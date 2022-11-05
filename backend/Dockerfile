@@ -1,6 +1,9 @@
 # syntax=docker/dockerfile:1.4
 FROM cgr.dev/chainguard/go:1.19 as build
 
+# See https://github.com/chainguard-images/go/issues/16
+USER root
+
 WORKDIR /src
 
 COPY . /src
