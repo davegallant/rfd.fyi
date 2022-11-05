@@ -1,13 +1,16 @@
-# syntax=docker/dockerfile:1
+# syntax=docker/dockerfile:1.4
+FROM cgr.dev/chainguard/go:1.19 as build
 
-FROM golang:1.18-alpine as go-build
+WORKDIR /src
 
-COPY . /backend
+COPY . /src
 
-WORKDIR /backend
+RUN CGO_ENABLED=0 go build -o backend .
 
-RUN CGO_ENABLED=0 go build -o server
+FROM cgr.dev/chainguard/static@sha256:b74f66382b721769876a8dc315b89f14ea9eb914badd3a5145752d6fa2659f0c
+
+COPY --from=build /src/backend /backend
 
 EXPOSE 8080
 
-CMD [ "/backend/server" ]
+CMD [ "/backend" ]
