@@ -18,7 +18,6 @@ backend:
 	@cd backend && go run .
 .PHONY: backend
 
-
 ## frontend: Build and run the frontend from source
 frontend:
 	@npx vue-cli-service serve
@@ -26,7 +25,7 @@ frontend:
 
 ## up: Build and run in docker compose
 up:
-	docker compose up -d
+	docker compose up --build -d
 .PHONY: up
 
 ## teardown: Teardown docker
