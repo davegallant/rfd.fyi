@@ -5,12 +5,14 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"time"
 
 	_ "github.com/joho/godotenv/autoload"
 	"github.com/rs/zerolog/log"
 
 	"github.com/gorilla/mux"
+	"go.opentelemetry.io/otel"
 )
 
 // @title           RFD FYI API
@@ -74,6 +76,11 @@ func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
 // @Router       /topics [get]
 // @Success 200 {array} Topic
 func (a *App) listTopics(w http.ResponseWriter, r *http.Request) {
+	tracer := otel.Tracer(os.Getenv("OTEL_SERVICE_NAME"))
+	ctx := r.Context()
+	ctx, span := tracer.Start(ctx, "list-topics")
+	defer span.End()
+
 	if time.Since(a.LastRefresh).Minutes() > 1 {
 		a.refreshTopics()
 	} else {

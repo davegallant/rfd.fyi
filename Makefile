@@ -16,7 +16,7 @@ help:
 ## backend: Build and run the backend from source
 backend:
 	@cd backend && go run .
-.PHONY: server
+.PHONY: backend
 
 
 ## frontend: Build and run the frontend from source
@@ -26,6 +26,10 @@ frontend:
 
 ## up: Build and run in docker compose
 up:
-	@if [ -e .env ]; then echo "Missing file: .env"; fi
 	docker compose up -d
 .PHONY: up
+
+## teardown: Teardown docker
+teardown:
+	docker compose down
+.PHONY: teardown
