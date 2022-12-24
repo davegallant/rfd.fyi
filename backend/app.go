@@ -91,10 +91,18 @@ func (a *App) listTopics(w http.ResponseWriter, r *http.Request) {
 
 func (a *App) refreshTopics() {
 	latestTopics := a.getDeals(9, 1, 4)
-	// TODO: only drop deals if a timer has been met
+	latestTopics = a.updateScores(latestTopics)
 	log.Debug().Msg("Refreshing topics")
 	a.CurrentTopics = latestTopics
 	a.LastRefresh = time.Now()
+}
+
+func (a *App) updateScores(t []Topic) []Topic {
+	for i := range t {
+		t[i].Score = t[i].Votes.Up - t[i].Votes.Down
+		log.Debug().Msgf("Added score: %d", t[i].Score)
+	}
+	return t
 }
 
 func (a *App) getDeals(id int, firstPage int, lastPage int) []Topic {

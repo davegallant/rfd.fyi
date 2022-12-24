@@ -12,9 +12,8 @@
       <thead class="thead thead-light text-muted">
         <tr>
           <th scope="col">Deal</th>
+          <th scope="col">Score</th>
           <th scope="col">Views</th>
-          <!-- TODO:score  -->
-          <!-- <th scope="col">Score</th> -->
           <th scope="col">Last Post</th>
         </tr>
       </thead>
@@ -39,9 +38,8 @@
               v-html="highlightMatches(topic.title)"
             ></a>
           </td>
+          <td scope="col">{{ topic.score }}</td>
           <td scope="col">{{ topic.total_views }}</td>
-          <!-- <td scope="col">{{ topic.score }}</td> -->
-          <!-- <td scope="col">{{ topic.votes.up - topic.votes.down }}</td> -->
           <td scope="col">{{ formatDate(topic.last_post_time) }}</td>
         </tr>
       </tbody>

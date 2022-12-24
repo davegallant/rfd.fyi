@@ -14,7 +14,7 @@ type Topic struct {
 	PostTime     string `json:"post_time"`
 	LastPostTime string `json:"last_post_time"`
 	Votes        Votes
-	Score        string `json:",omitempty"`
+	Score        int `json:"score"`
 } // @name Topic
 
 type Votes struct {
