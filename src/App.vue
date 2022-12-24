@@ -38,7 +38,15 @@
               v-html="highlightMatches(topic.title)"
             ></a>
           </td>
-          <td scope="col">{{ topic.score }}</td>
+          <td v-if="topic.score > 0" scope="col" class="green-score">
+            +{{ topic.score }}
+          </td>
+          <td v-if="topic.score < 0" scope="col" class="red-score">
+            {{ topic.score }}
+          </td>
+          <td v-if="topic.score == 0" scope="col">
+            {{ topic.score }}
+          </td>
           <td scope="col">{{ topic.total_views }}</td>
           <td scope="col">{{ formatDate(topic.last_post_time) }}</td>
         </tr>

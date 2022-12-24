@@ -100,7 +100,6 @@ func (a *App) refreshTopics() {
 func (a *App) updateScores(t []Topic) []Topic {
 	for i := range t {
 		t[i].Score = t[i].Votes.Up - t[i].Votes.Down
-		log.Debug().Msgf("Added score: %d", t[i].Score)
 	}
 	return t
 }

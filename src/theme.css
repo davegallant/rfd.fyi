@@ -199,3 +199,11 @@ footer {
 .footer-right {
   float: right;
 }
+
+.green-score {
+  color: rgb(22, 120, 63);
+}
+
+.red-score {
+  color: rgb(175, 21, 21);
+}
