@@ -12,7 +12,7 @@ Ensure that an `.env` file is filled in with the appropriate values.
 
 Example key/values can be found in [example.env](./example.env).
 
-*Note: that a [honeycomb](https://honeycomb.io/) API key is currently required.*
+_Note: that a [honeycomb](https://honeycomb.io/) API key is currently required._
 
 ## Local Development
 
@@ -32,6 +32,14 @@ make frontend
 
 ## Docker Compose
 
+To build containers from source:
+
 ```sh
-make up
+make dev
+```
+
+To run the latest published images:
+
+```sh
+make prod
 ```
