@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	_ "github.com/joho/godotenv/autoload"
@@ -104,6 +105,10 @@ func (a *App) updateScores(t []Topic) []Topic {
 	return t
 }
 
+func (a *App) isSponsor(t Topic) bool {
+	return strings.HasPrefix(t.Title, "[Sponsored]")
+}
+
 func (a *App) getDeals(id int, firstPage int, lastPage int) []Topic {
 
 	var t []Topic
@@ -127,7 +132,12 @@ func (a *App) getDeals(id int, firstPage int, lastPage int) []Topic {
 			log.Warn().Msgf("could not unmarshal response body: %s\n %s", err)
 		}
 
-		t = append(t, response.Topics...)
+		for _, topic := range response.Topics {
+			if a.isSponsor(topic) {
+				continue
+			}
+			t = append(t, topic)
+		}
 	}
 	return t
 }

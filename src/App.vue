@@ -146,7 +146,7 @@ export default {
         Deal: "deal",
         Score: "score",
         Views: "total_views",
-        "Last Comment": "last_post_time",
+        "Last Reply": "last_post_time",
       };
     },
     filteredTopics() {
