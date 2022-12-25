@@ -11,10 +11,18 @@
     <table class="table table-dark table-hover">
       <thead class="thead thead-light text-muted">
         <tr>
-          <th scope="col">Deal</th>
-          <th scope="col">Score</th>
-          <th scope="col">Views</th>
-          <th scope="col">Last Post</th>
+          <th
+            v-for="(col, key) in columns"
+            v-on:click="sortTable(col)"
+            :key="col"
+          >
+            {{ key }}
+            <div
+              class="arrow"
+              v-if="col == sortColumn"
+              v-bind:class="ascending ? 'arrow_up' : 'arrow_down'"
+            ></div>
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -53,18 +61,6 @@
       </tbody>
     </table>
     <footer class="fixed-bottom">
-      <div class="footer-left">
-        <input
-          class="form-check-input"
-          type="checkbox"
-          value=""
-          id="flexCheckDefault"
-          checked
-          disabled
-        />
-        Auto-refresh
-      </div>
-
       <div class="footer-right">
         <github-button href="https://github.com/davegallant/rfd-fyi"
           >Star</github-button
@@ -86,9 +82,11 @@ import "vue-loading-overlay/dist/vue-loading.css";
 export default {
   data() {
     return {
-      topics: [],
-      isLoading: false,
+      ascending: true,
       filter: "",
+      isLoading: false,
+      sortColumn: "last_post_time",
+      topics: [],
     };
   },
   mounted() {
@@ -97,7 +95,6 @@ export default {
     Mousetrap.bind("/", this.focusSearch, "keyup");
     Mousetrap.bind("r", this.loadDeals);
     Mousetrap.bind("escape", this.blurSearch);
-    this.interval = setInterval(() => this.fetchDeals(), 10000);
   },
   methods: {
     focusSearch() {
@@ -117,12 +114,39 @@ export default {
           console.log(err.response);
         });
     },
+    sortTable: function sortTable(col) {
+      if (this.sortColumn === col) {
+        this.ascending = !this.ascending;
+      } else {
+        this.ascending = true;
+        this.sortColumn = col;
+      }
+
+      var ascending = this.ascending;
+
+      this.filteredTopics.sort(function (a, b) {
+        if (a[col] > b[col]) {
+          return ascending ? -1 : 1;
+        } else if (a[col] < b[col]) {
+          return ascending ? 1 : -1;
+        }
+        return 0;
+      });
+    },
   },
   props: ["date"],
   computed: {
     formatDate() {
       return (v) => {
         return moment(String(v)).format("hh:mm A z (MM/DD)");
+      };
+    },
+    columns: function columns() {
+      return {
+        Deal: "deal",
+        Score: "score",
+        Views: "total_views",
+        "Last Comment": "last_post_time",
       };
     },
     filteredTopics() {
