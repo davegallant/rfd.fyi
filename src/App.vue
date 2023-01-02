@@ -23,7 +23,7 @@ export default {
     this.isLoading = true;
     this.fetchDeals();
     Mousetrap.bind("/", this.focusSearch, "keyup");
-    Mousetrap.bind("r", this.loadDeals);
+    Mousetrap.bind("r", this.fetchDeals);
     Mousetrap.bind("escape", this.blurSearch);
   },
   methods: {
@@ -34,6 +34,7 @@ export default {
       this.$refs.search.blur();
     },
     fetchDeals() {
+      this.isLoading = true;
       axios
         .get("api/v1/topics")
         .then((response) => {
@@ -170,6 +171,7 @@ export default {
       </tbody>
     </table>
     <footer class="fixed-bottom">
+      <small>Tip: Press '/' to search and 'r' to reload</small>
       <div class="footer-right">
         <github-button href="https://github.com/davegallant/rfd-fyi"
           >Star</github-button
