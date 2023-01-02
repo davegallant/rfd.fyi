@@ -19,7 +19,8 @@ export default {
   },
   mounted() {
     this.sortColumn = localStorage.getItem("sortColumn") || "score";
-    this.ascending = localStorage.getItem("ascending") || true;
+    this.ascending =
+      localStorage.getItem("ascending") === "false" ? false : true;
     this.isLoading = true;
     this.fetchDeals();
     Mousetrap.bind("/", this.focusSearch, "keyup");
