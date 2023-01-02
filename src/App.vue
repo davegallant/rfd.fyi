@@ -1,3 +1,112 @@
+<script>
+import axios from "axios";
+import moment from "moment";
+import Loading from "vue-loading-overlay";
+import Mousetrap from "mousetrap";
+import GithubButton from "vue-github-button";
+
+import "vue-loading-overlay/dist/vue-loading.css";
+
+export default {
+  data() {
+    return {
+      ascending: this.ascending,
+      filter: "",
+      isLoading: false,
+      sortColumn: this.sortColumn,
+      topics: [],
+    };
+  },
+  mounted() {
+    this.sortColumn = localStorage.getItem("sortColumn") || "score";
+    this.ascending = localStorage.getItem("ascending") || true;
+    this.isLoading = true;
+    this.fetchDeals();
+    Mousetrap.bind("/", this.focusSearch, "keyup");
+    Mousetrap.bind("r", this.loadDeals);
+    Mousetrap.bind("escape", this.blurSearch);
+  },
+  methods: {
+    focusSearch() {
+      this.$refs.search.focus();
+    },
+    blurSearch() {
+      this.$refs.search.blur();
+    },
+    fetchDeals() {
+      axios
+        .get("api/v1/topics")
+        .then((response) => {
+          this.topics = response.data;
+          this.isLoading = false;
+          this.sortTable(this.sortColumn, false);
+        })
+        .catch((err) => {
+          console.log(err.response);
+        });
+    },
+    sortTable: function sortTable(col, flipAscending) {
+      if (this.sortColumn === col && flipAscending) {
+        this.ascending = !this.ascending;
+      }
+
+      var ascending = this.ascending;
+
+      localStorage.setItem("ascending", this.ascending);
+      localStorage.setItem("sortColumn", col);
+      this.sortColumn = col;
+
+      this.filteredTopics.sort(function (a, b) {
+        if (a[col] > b[col]) {
+          return ascending ? -1 : 1;
+        } else if (a[col] < b[col]) {
+          return ascending ? 1 : -1;
+        }
+        return 0;
+      });
+    },
+  },
+  props: ["date"],
+  computed: {
+    formatDate() {
+      return (v) => {
+        return moment(String(v)).format("hh:mm A z (MM/DD)");
+      };
+    },
+    columns: function columns() {
+      return {
+        Deal: "deal",
+        Score: "score",
+        Views: "total_views",
+        "Last Reply": "last_post_time",
+      };
+    },
+    filteredTopics() {
+      return this.topics.filter((row) => {
+        const titles = row.title.toString().toLowerCase();
+        const searchTerm = this.filter.toLowerCase();
+
+        return titles.includes(searchTerm);
+      });
+    },
+    highlightMatches() {
+      return (v) => {
+        if (this.filter == "") return v;
+        const matchExists = v.toLowerCase().includes(this.filter.toLowerCase());
+        if (!matchExists) return v;
+
+        const re = new RegExp(this.filter, "ig");
+        return v.replace(re, (matchedText) => `<mark>${matchedText}</mark>`);
+      };
+    },
+  },
+  components: {
+    Loading,
+    GithubButton,
+  },
+};
+</script>
+
 <template>
   <link rel="shortcut icon" type="image/png" href="/static/favicon.png" />
   <body>
@@ -13,7 +122,7 @@
         <tr>
           <th
             v-for="(col, key) in columns"
-            v-on:click="sortTable(col)"
+            v-on:click="sortTable(col, true)"
             :key="col"
           >
             {{ key }}
@@ -69,111 +178,6 @@
     </footer>
   </body>
 </template>
-
-<script>
-import axios from "axios";
-import moment from "moment";
-import Loading from "vue-loading-overlay";
-import Mousetrap from "mousetrap";
-import GithubButton from "vue-github-button";
-
-import "vue-loading-overlay/dist/vue-loading.css";
-
-export default {
-  data() {
-    return {
-      ascending: true,
-      filter: "",
-      isLoading: false,
-      sortColumn: "last_post_time",
-      topics: [],
-    };
-  },
-  mounted() {
-    this.isLoading = true;
-    this.fetchDeals();
-    Mousetrap.bind("/", this.focusSearch, "keyup");
-    Mousetrap.bind("r", this.loadDeals);
-    Mousetrap.bind("escape", this.blurSearch);
-  },
-  methods: {
-    focusSearch() {
-      this.$refs.search.focus();
-    },
-    blurSearch() {
-      this.$refs.search.blur();
-    },
-    fetchDeals() {
-      axios
-        .get("api/v1/topics")
-        .then((response) => {
-          this.topics = response.data;
-          this.isLoading = false;
-        })
-        .catch((err) => {
-          console.log(err.response);
-        });
-    },
-    sortTable: function sortTable(col) {
-      if (this.sortColumn === col) {
-        this.ascending = !this.ascending;
-      } else {
-        this.ascending = true;
-        this.sortColumn = col;
-      }
-
-      var ascending = this.ascending;
-
-      this.filteredTopics.sort(function (a, b) {
-        if (a[col] > b[col]) {
-          return ascending ? -1 : 1;
-        } else if (a[col] < b[col]) {
-          return ascending ? 1 : -1;
-        }
-        return 0;
-      });
-    },
-  },
-  props: ["date"],
-  computed: {
-    formatDate() {
-      return (v) => {
-        return moment(String(v)).format("hh:mm A z (MM/DD)");
-      };
-    },
-    columns: function columns() {
-      return {
-        Deal: "deal",
-        Score: "score",
-        Views: "total_views",
-        "Last Reply": "last_post_time",
-      };
-    },
-    filteredTopics() {
-      return this.topics.filter((row) => {
-        const titles = row.title.toString().toLowerCase();
-        const searchTerm = this.filter.toLowerCase();
-
-        return titles.includes(searchTerm);
-      });
-    },
-    highlightMatches() {
-      return (v) => {
-        if (this.filter == "") return v;
-        const matchExists = v.toLowerCase().includes(this.filter.toLowerCase());
-        if (!matchExists) return v;
-
-        const re = new RegExp(this.filter, "ig");
-        return v.replace(re, (matchedText) => `<mark>${matchedText}</mark>`);
-      };
-    },
-  },
-  components: {
-    Loading,
-    GithubButton,
-  },
-};
-</script>
 
 <style>
 #app {
