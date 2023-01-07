@@ -85,7 +85,7 @@ export default {
     },
     filteredTopics() {
       return this.topics.filter((row) => {
-        const titles = row.title.toString().toLowerCase();
+        const titles = (row.title.toString() + ' [' + row.Offer.dealer_name + ']').toLowerCase();
         const searchTerm = this.filter.toLowerCase();
 
         return titles.includes(searchTerm);
@@ -154,7 +154,7 @@ export default {
             <a
               :href="`https://forums.redflagdeals.com${topic.web_path}`"
               target="_blank"
-              v-html="highlightMatches(topic.title)"
+              v-html="highlightMatches(topic.title + ' [' + topic.Offer.dealer_name + ']')"
             ></a>
           </td>
           <td v-if="topic.score > 0" scope="col" class="green-score">

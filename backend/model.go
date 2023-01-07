@@ -14,6 +14,7 @@ type Topic struct {
 	PostTime     string `json:"post_time"`
 	LastPostTime string `json:"last_post_time"`
 	Votes        Votes
+	Offer        Offer
 	Score        int `json:"score"`
 } // @name Topic
 
@@ -21,3 +22,7 @@ type Votes struct {
 	Up   int `json:"total_up"`
 	Down int `json:"total_down"`
 } // @name Votes
+
+type Offer struct {
+	DealerName string `json:"dealer_name"`
+} // @name Offer

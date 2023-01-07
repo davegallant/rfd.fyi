@@ -91,7 +91,7 @@ func (a *App) listTopics(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *App) refreshTopics() {
-	latestTopics := a.getDeals(9, 1, 4)
+	latestTopics := a.getDeals(9, 1, 6)
 	latestTopics = a.updateScores(latestTopics)
 	log.Debug().Msg("Refreshing topics")
 	a.CurrentTopics = latestTopics
