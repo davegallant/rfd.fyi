@@ -58,7 +58,7 @@ export default {
       localStorage.setItem("sortColumn", col);
       this.sortColumn = col;
 
-      this.filteredTopics.sort(function (a, b) {
+      this.topics.sort(function (a, b) {
         if (a[col] > b[col]) {
           return ascending ? -1 : 1;
         } else if (a[col] < b[col]) {
