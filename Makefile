@@ -30,6 +30,8 @@ dev:
 
 ## prod: Run the latest images in docker compose
 prod:
+	@docker pull ghcr.io/davegallant/rfd-fyi-backend
+	@docker pull ghcr.io/davegallant/rfd-fyi-frontend
 	docker compose -f docker-compose.prod.yml up -d
 .PHONY: up
 
