@@ -117,6 +117,7 @@ export default {
       type="text"
       placeholder="Search"
       v-model="filter"
+      v-on:keyup.enter="blurSearch()"
       ref="search"
     />
     <table class="table table-dark table-hover">
