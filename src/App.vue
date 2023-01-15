@@ -67,6 +67,17 @@ export default {
         return 0;
       });
     },
+    isMobile() {
+      if (
+        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+          navigator.userAgent
+        )
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    },
   },
   props: ["date"],
   computed: {
@@ -85,7 +96,12 @@ export default {
     },
     filteredTopics() {
       return this.topics.filter((row) => {
-        const titles = (row.title.toString() + ' [' + row.Offer.dealer_name + ']').toLowerCase();
+        const titles = (
+          row.title.toString() +
+          " [" +
+          row.Offer.dealer_name +
+          "]"
+        ).toLowerCase();
         const searchTerm = this.filter.toLowerCase();
 
         return titles.includes(searchTerm);
@@ -115,7 +131,7 @@ export default {
     <input
       class="form-control bg-dark text-light mousetrap"
       type="text"
-      placeholder="Search"
+      placeholder="Filter"
       v-model="filter"
       v-on:keyup.enter="blurSearch()"
       ref="search"
@@ -155,7 +171,11 @@ export default {
             <a
               :href="`https://forums.redflagdeals.com${topic.web_path}`"
               target="_blank"
-              v-html="highlightMatches(topic.title + ' [' + topic.Offer.dealer_name + ']')"
+              v-html="
+                highlightMatches(
+                  topic.title + ' [' + topic.Offer.dealer_name + ']'
+                )
+              "
             ></a>
           </td>
           <td v-if="topic.score > 0" scope="col" class="green-score">
@@ -172,14 +192,16 @@ export default {
         </tr>
       </tbody>
     </table>
-    <footer class="fixed-bottom">
-      <small>Tip: Press '/' to search and 'r' to reload</small>
-      <div class="footer-right">
-        <github-button href="https://github.com/davegallant/rfd-fyi"
-          >Star</github-button
-        >
-      </div>
-    </footer>
+    <div v-if="!isMobile()">
+      <footer class="fixed-bottom">
+        <small>Tip: Press '/' to search and 'r' to reload</small>
+        <div class="footer-right">
+          <github-button href="https://github.com/davegallant/rfd-fyi"
+            >Star</github-button
+          >
+        </div>
+      </footer>
+    </div>
   </body>
 </template>
 
