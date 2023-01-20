@@ -6,14 +6,6 @@ The frontend is made with Vue 3 and the backend is written in Go. The backend ex
 
 It is hosted at [rfd.fyi](https://rfd.fyi).
 
-## Environment Variables
-
-Ensure that an `.env` file is filled in with the appropriate values.
-
-Example key/values can be found in [example.env](./example.env).
-
-_Note: that a [honeycomb](https://honeycomb.io/) API key is currently required._
-
 ## Local Development
 
 If running locally, ensure that the ENV vars are exported to your shell.
