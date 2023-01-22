@@ -11,7 +11,7 @@ export default {
   data() {
     return {
       ascending: this.ascending,
-      filter: "",
+      filter: window.location.href.split("filter=")[1] || "",
       isLoading: false,
       sortColumn: this.sortColumn,
       topics: [],
@@ -23,16 +23,24 @@ export default {
       localStorage.getItem("ascending") === "false" ? false : true;
     this.isLoading = true;
     this.fetchDeals();
-    Mousetrap.bind("/", this.focusSearch, "keyup");
+    Mousetrap.bind("/", this.focusFilter, "keyup");
     Mousetrap.bind("r", this.fetchDeals);
-    Mousetrap.bind("escape", this.blurSearch);
+    Mousetrap.bind("escape", this.blurFilter);
   },
   methods: {
-    focusSearch() {
-      this.$refs.search.focus();
+    focusFilter() {
+      this.$refs.filter.focus();
     },
-    blurSearch() {
-      this.$refs.search.blur();
+    blurFilter() {
+      this.$refs.filter.blur();
+    },
+    createFilterRoute(params) {
+      this.$refs.filter.blur();
+      history.pushState(
+        {},
+        null,
+        `${window.location.origin}#/filter=${encodeURIComponent(params)}`
+      );
     },
     fetchDeals() {
       this.isLoading = true;
@@ -79,14 +87,13 @@ export default {
       }
     },
   },
-  props: ["date"],
   computed: {
     formatDate() {
       return (v) => {
         return moment(String(v)).format("hh:mm A z (MM/DD)");
       };
     },
-    columns: function columns() {
+    columns() {
       return {
         Deal: "deal",
         Score: "score",
@@ -102,9 +109,8 @@ export default {
           row.Offer.dealer_name +
           "]"
         ).toLowerCase();
-        const searchTerm = this.filter.toLowerCase();
-
-        return titles.includes(searchTerm);
+        const filterTerm = this.filter.toLowerCase();
+        return titles.includes(filterTerm);
       });
     },
     highlightMatches() {
@@ -131,10 +137,11 @@ export default {
     <input
       class="form-control bg-dark text-light mousetrap"
       type="text"
+      id="filter"
       placeholder="Filter"
       v-model="filter"
-      v-on:keyup.enter="blurSearch()"
-      ref="search"
+      v-on:keyup.enter="createFilterRoute(this.filter.toString())"
+      ref="filter"
     />
     <table class="table table-dark table-hover">
       <thead class="thead thead-light text-muted">
@@ -194,7 +201,7 @@ export default {
     </table>
     <div v-if="!isMobile()">
       <footer class="fixed-bottom">
-        <small>Tip: Press '/' to search and 'r' to reload</small>
+        <small>Tip: Press '/' to filter and create filter links (i.e. <a href="/#/filter=pizza" onclick="setTimeout(location.reload.bind(location), 1)">https://rfd.fyi/#/filter=pizza</a>)</small>
         <div class="footer-right">
           <github-button href="https://github.com/davegallant/rfd-fyi"
             >Star</github-button

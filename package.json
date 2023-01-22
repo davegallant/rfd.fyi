@@ -19,7 +19,8 @@
     "vue": "^3.2.37",
     "vue-github-button": "^3.0.3",
     "vue-gtag": "^2.0.1",
-    "vue-loading-overlay": "^5.0.3"
+    "vue-loading-overlay": "^5.0.3",
+    "vue-router": "4"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
