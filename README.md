@@ -8,8 +8,6 @@ It is hosted at [rfd.fyi](https://rfd.fyi).
 
 ## Local Development
 
-If running locally, ensure that the ENV vars are exported to your shell.
-
 To get up and running locally: in one pane/tab, run:
 
 ```sh
