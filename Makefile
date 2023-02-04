@@ -20,6 +20,7 @@ backend:
 
 ## frontend: Build and run the frontend from source
 frontend:
+	@npm install @vue/cli-service
 	@npx vue-cli-service serve
 .PHONY: server
 
