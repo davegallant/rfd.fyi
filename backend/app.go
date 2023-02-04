@@ -82,20 +82,18 @@ func (a *App) listTopics(w http.ResponseWriter, r *http.Request) {
 	ctx, span := tracer.Start(ctx, "list-topics")
 	defer span.End()
 
-	if time.Since(a.LastRefresh).Minutes() > 1 {
-		a.refreshTopics()
-	} else {
-		log.Debug().Msg("Topics cache has not expired. Using existing.")
-	}
 	respondWithJSON(w, http.StatusOK, a.CurrentTopics)
 }
 
 func (a *App) refreshTopics() {
-	latestTopics := a.getDeals(9, 1, 6)
-	latestTopics = a.updateScores(latestTopics)
-	log.Debug().Msg("Refreshing topics")
-	a.CurrentTopics = latestTopics
-	a.LastRefresh = time.Now()
+	for {
+		latestTopics := a.getDeals(9, 1, 6)
+		latestTopics = a.updateScores(latestTopics)
+		log.Debug().Msg("Refreshing topics")
+		a.CurrentTopics = latestTopics
+		a.LastRefresh = time.Now()
+		time.Sleep(60 * time.Second)
+	}
 }
 
 func (a *App) updateScores(t []Topic) []Topic {

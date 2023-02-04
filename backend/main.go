@@ -35,5 +35,6 @@ func main() {
 
 	a.Initialize()
 
+	go a.refreshTopics()
 	a.Run(httpPort)
 }
