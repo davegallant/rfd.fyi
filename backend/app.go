@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"math/rand"
 	"net/http"
 	"os"
 	"strings"
@@ -92,7 +93,8 @@ func (a *App) refreshTopics() {
 		log.Debug().Msg("Refreshing topics")
 		a.CurrentTopics = latestTopics
 		a.LastRefresh = time.Now()
-		time.Sleep(60 * time.Second)
+		rand.Seed(time.Now().UnixNano())
+		time.Sleep(time.Duration(rand.Intn(90 - 60 + 1) + 60) * time.Second)
 	}
 }
 
