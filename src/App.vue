@@ -132,7 +132,7 @@ export default {
 </script>
 
 <template>
-  <link rel="shortcut icon" type="image/png" href="/static/favicon.png" />
+  <link rel="shortcut icon" type="image/png" href="/favicon.png" />
   <body>
     <input
       class="form-control bg-dark text-light mousetrap"
