@@ -2,8 +2,8 @@
 import axios from "axios";
 import moment from "moment";
 import Loading from "vue-loading-overlay";
-import Mousetrap from "mousetrap";
 import GithubButton from "vue-github-button";
+import { install } from "@github/hotkey";
 
 import "vue-loading-overlay/dist/vue-loading.css";
 
@@ -18,22 +18,17 @@ export default {
     };
   },
   mounted() {
+    // Install all the hotkeys on the page
+    for (const el of document.querySelectorAll("[data-hotkey]")) {
+      install(el);
+    }
     this.sortColumn = localStorage.getItem("sortColumn") || "score";
     this.ascending =
       localStorage.getItem("ascending") === "false" ? false : true;
     this.isLoading = true;
     this.fetchDeals();
-    Mousetrap.bind("/", this.focusFilter, "keyup");
-    Mousetrap.bind("r", this.fetchDeals);
-    Mousetrap.bind("escape", this.blurFilter);
   },
   methods: {
-    focusFilter() {
-      this.$refs.filter.focus();
-    },
-    blurFilter() {
-      this.$refs.filter.blur();
-    },
     createFilterRoute(params) {
       this.$refs.filter.blur();
       history.pushState(
@@ -135,12 +130,14 @@ export default {
   <link rel="shortcut icon" type="image/png" href="/favicon.png" />
   <body>
     <input
-      class="form-control bg-dark text-light mousetrap"
+      class="form-control bg-dark text-light"
       type="text"
       id="filter"
       placeholder="Filter"
+      data-hotkey="/"
       v-model="filter"
       v-on:keyup.enter="createFilterRoute(this.filter.toString())"
+      v-on:keyup.escape="this.$refs.filter.blur()"
       ref="filter"
     />
     <table class="table table-dark table-hover">
@@ -201,7 +198,14 @@ export default {
     </table>
     <div v-if="!isMobile()">
       <footer class="fixed-bottom">
-        <small>Tip: Press '/' to filter and create filter links (i.e. <a href="/#/filter=pizza" onclick="setTimeout(location.reload.bind(location), 1)">https://rfd.fyi/#/filter=pizza</a>)</small>
+        <small
+          >Tip: Press '/' to filter and create filter links (i.e.
+          <a
+            href="/#/filter=pizza"
+            onclick="setTimeout(location.reload.bind(location), 1)"
+            >https://rfd.fyi/#/filter=pizza</a
+          >)</small
+        >
         <div class="footer-right">
           <github-button href="https://github.com/davegallant/rfd-fyi"
             >Star</github-button
