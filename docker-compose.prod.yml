@@ -9,7 +9,9 @@ services:
       - "backend:backend"
     volumes:
       - ./data:/data
+    restart: always
   backend:
     image: ghcr.io/davegallant/rfd-fyi-backend
     ports:
       - 8080:8080
+    restart: always
