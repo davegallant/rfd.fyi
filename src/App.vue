@@ -177,10 +177,19 @@ export default {
               target="_blank"
               v-html="
                 highlightMatches(
-                  topic.title + ' [' + topic.Offer.dealer_name + ']'
+                  topic.title + ' [' + topic.Offer.dealer_name + '] '
                 )
               "
             ></a>
+            <a
+              :href="`${topic.Offer.url}`"
+              target="_blank"
+              v-if="topic.Offer.url"
+              ><span class="material-symbols-outlined"> link </span></a
+            >
+            <span v-if="!topic.Offer.url" class="material-symbols-outlined">
+              link_off
+            </span>
           </td>
           <td v-if="topic.score > 0" scope="col" class="green-score">
             +{{ topic.score }}

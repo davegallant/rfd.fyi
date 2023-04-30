@@ -25,4 +25,5 @@ type Votes struct {
 
 type Offer struct {
 	DealerName string `json:"dealer_name"`
+	Url string `json:"url"`
 } // @name Offer
