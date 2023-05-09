@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+  pull_request:
 
 jobs:
   publish-backend:
@@ -38,6 +39,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push to Packages
+        if: github.ref == 'refs/heads/main'
         uses: docker/build-push-action@v4
         with:
           context: backend
@@ -78,6 +80,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push to Packages
+        if: github.ref == 'refs/heads/main'
         uses: docker/build-push-action@v4
         with:
           context: .
