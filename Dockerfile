@@ -10,7 +10,7 @@ COPY . .
 
 RUN yarn build
 
-FROM caddy:2.7.2-alpine as runtime
+FROM caddy:2.7.3-alpine as runtime
 
 WORKDIR /my-site
 
