@@ -20,5 +20,4 @@ const app = createApp(App).use(VueGtag, {
 });
 
 app.use(router);
-console.log(router);
 app.mount("#app");
