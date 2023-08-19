@@ -1,4 +1,4 @@
-FROM node:19.9.0-alpine3.16 as builder
+FROM node:20.2.0-alpine3.16 as builder
 
 WORKDIR /app
 
@@ -10,7 +10,7 @@ COPY . .
 
 RUN yarn build
 
-FROM caddy:2.6.4-alpine as runtime
+FROM caddy:2.7.3-alpine as runtime
 
 WORKDIR /my-site
 
