@@ -5,7 +5,7 @@ import Loading from "vue-loading-overlay";
 import GithubButton from "vue-github-button";
 import { install } from "@github/hotkey";
 
-import "vue-loading-overlay/dist/vue-loading.css";
+import 'vue-loading-overlay/dist/css/index.css';
 
 export default {
   data() {
