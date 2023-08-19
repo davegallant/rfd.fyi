@@ -161,7 +161,7 @@ export default {
         <loading
           v-model:active="isLoading"
           color="#ccc"
-          opacity="0"
+          opacity=0
           loader="bars"
           :is-full-page="false"
         >

@@ -9,7 +9,6 @@ body {
 
 html {
   background-color: #282828; /**/
-  color: #ebdbb2; /**/
   min-width: 100%;
 }
 
@@ -199,11 +198,11 @@ footer {
 }
 
 .green-score {
-  color: rgb(22, 120, 63);
+  color: rgb(22, 120, 63) !important;
 }
 
 .red-score {
-  color: rgb(175, 21, 21);
+  color: rgb(175, 21, 21) !important;
 }
 
 .arrow_down {
