@@ -38,12 +38,12 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Push to Packages
+      - name: Build / push
         uses: docker/build-push-action@v4
         with:
           context: backend
           file: ./backend/Dockerfile
-          push: true
+          push: ${{ github.ref == 'refs/heads/main' }}
           tags: ${{ steps.prep.outputs.tags }}
 
   publish-frontend:
@@ -78,10 +78,10 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Push to Packages
+      - name: Build / push
         uses: docker/build-push-action@v4
         with:
           context: .
           file: ./Dockerfile
-          push: true
+          push: ${{ github.ref == 'refs/heads/main' }}
           tags: ${{ steps.prep.outputs.tags }}
