@@ -10,7 +10,7 @@
   "dependencies": {
     "@github/hotkey": "^2.0.1",
     "@popperjs/core": "^2.11.8",
-    "axios": "^1.4.0",
+    "axios": "^1.6.0",
     "bootstrap": "^5.3.1",
     "bootstrap-vue": "^2.22.0",
     "core-js": "^3.32.1",
