@@ -130,7 +130,7 @@ export default {
   <link rel="shortcut icon" type="image/png" href="/favicon.png" />
   <body>
     <input
-      class="form-control bg-dark text-light"
+      class="form-control" 
       type="text"
       id="filter"
       placeholder="Filter"
@@ -140,8 +140,8 @@ export default {
       v-on:keyup.escape="this.$refs.filter.blur()"
       ref="filter"
     />
-    <table class="table table-dark table-hover">
-      <thead class="thead thead-light text-muted">
+    <table class="table table-hover">
+      <thead class="thead text-muted">
         <tr>
           <th
             v-for="(col, key) in columns"

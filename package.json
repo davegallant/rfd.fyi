@@ -14,8 +14,10 @@
     "bootstrap": "^5.3.1",
     "bootstrap-vue": "^2.22.0",
     "core-js": "^3.32.1",
+    "cssnano": "^6.0.3",
     "jquery": "^3.7.0",
     "moment": "^2.29.4",
+    "postcss": "^8.4.33",
     "vue": "^3.3.4",
     "vue-github-button": "^3.0.3",
     "vue-gtag": "^2.0.1",
@@ -29,9 +31,10 @@
     "@types/mousetrap": "^1.6.11",
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-eslint": "~5.0.0",
-    "@vue/cli-service": "~5.0.0",
+    "@vue/cli-service": "^5.0.8",
     "eslint": "^8.47.0",
-    "eslint-plugin-vue": "^9.17.0"
+    "eslint-plugin-vue": "^9.17.0",
+    "postcss-cli": "^11.0.0"
   },
   "eslintConfig": {
     "root": true,

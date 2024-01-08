@@ -4,11 +4,11 @@ WORKDIR /app
 
 COPY package*.json ./
 
-RUN yarn install
+RUN npm install
 
 COPY . .
 
-RUN yarn build
+RUN npm run build
 
 FROM caddy:2.7.6-alpine as runtime
 
