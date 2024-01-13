@@ -6,7 +6,6 @@ import (
 	"io/ioutil"
 	"math/rand"
 	"net/http"
-	"os"
 	"strings"
 	"time"
 
@@ -14,7 +13,6 @@ import (
 	"github.com/rs/zerolog/log"
 
 	"github.com/gorilla/mux"
-	"go.opentelemetry.io/otel"
 )
 
 // @title           RFD FYI API
@@ -78,11 +76,6 @@ func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
 // @Router       /topics [get]
 // @Success 200 {array} Topic
 func (a *App) listTopics(w http.ResponseWriter, r *http.Request) {
-	tracer := otel.Tracer(os.Getenv("OTEL_SERVICE_NAME"))
-	ctx := r.Context()
-	ctx, span := tracer.Start(ctx, "list-topics")
-	defer span.End()
-
 	respondWithJSON(w, http.StatusOK, a.CurrentTopics)
 }
 
@@ -94,7 +87,7 @@ func (a *App) refreshTopics() {
 		a.CurrentTopics = latestTopics
 		a.LastRefresh = time.Now()
 		rand.Seed(time.Now().UnixNano())
-		time.Sleep(time.Duration(rand.Intn(90 - 60 + 1) + 60) * time.Second)
+		time.Sleep(time.Duration(rand.Intn(90-60+1)+60) * time.Second)
 	}
 }
 
