@@ -3,7 +3,7 @@ module github.com/davegallant/rfd-fyi
 go 1.18
 
 require (
-	github.com/gorilla/mux v1.8.0
+	github.com/gorilla/mux v1.8.1
 	github.com/joho/godotenv v1.4.0
 	github.com/rs/zerolog v1.27.0
 	go.opentelemetry.io/otel v1.11.1
