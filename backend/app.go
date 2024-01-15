@@ -6,9 +6,11 @@ import (
 	"io/ioutil"
 	"math/rand"
 	"net/http"
+	"net/url"
 	"strings"
 	"time"
 
+	"github.com/dlclark/regexp2"
 	_ "github.com/joho/godotenv/autoload"
 	"github.com/rs/zerolog/log"
 
@@ -35,6 +37,12 @@ type App struct {
 	BasePath      string
 	CurrentTopics []Topic
 	LastRefresh   time.Time
+	Redirects     []Redirect
+}
+
+type Redirect struct {
+	Name    string `json:"name"`
+	Pattern string `json:"pattern"`
 }
 
 func (a *App) Initialize() {
@@ -81,10 +89,15 @@ func (a *App) listTopics(w http.ResponseWriter, r *http.Request) {
 
 func (a *App) refreshTopics() {
 	for {
+		log.Info().Msg("Refreshing topics")
 		latestTopics := a.getDeals(9, 1, 6)
 		latestTopics = a.updateScores(latestTopics)
-		log.Debug().Msg("Refreshing topics")
-		a.CurrentTopics = latestTopics
+
+		log.Info().Msg("Refreshing redirects")
+		latestRedirects := a.getRedirects()
+		a.Redirects = latestRedirects
+		a.CurrentTopics = a.stripRedirects(latestTopics)
+
 		a.LastRefresh = time.Now()
 		rand.Seed(time.Now().UnixNano())
 		time.Sleep(time.Duration(rand.Intn(90-60+1)+60) * time.Second)
@@ -94,6 +107,38 @@ func (a *App) refreshTopics() {
 func (a *App) updateScores(t []Topic) []Topic {
 	for i := range t {
 		t[i].Score = t[i].Votes.Up - t[i].Votes.Down
+	}
+	return t
+}
+
+func (a *App) stripRedirects(t []Topic) []Topic {
+	for i := range t {
+		if t[i].Offer.Url == "" {
+			continue
+		}
+
+		var offerUrl = t[i].Offer.Url
+		log.Debug().Msgf("Offer url is : %s", offerUrl)
+		for _, r := range a.Redirects {
+			re := regexp2.MustCompile(r.Pattern, 0)
+			if m, _ := re.FindStringMatch(offerUrl); m != nil {
+				g := m.GroupByName("baseUrl")
+
+				if g.Name != "baseUrl" {
+					continue
+				}
+				decodedValue, err := url.QueryUnescape(g.String())
+				if err != nil {
+					log.Error().Msgf("%s", err)
+					break
+				}
+				t[i].Offer.Url = decodedValue
+				log.Debug().Msgf("Setting offer url to: %s", t[i].Offer.Url)
+
+				break
+			}
+		}
+
 	}
 	return t
 }
@@ -122,7 +167,7 @@ func (a *App) getDeals(id int, firstPage int, lastPage int) []Topic {
 		err = json.Unmarshal([]byte(body), &response)
 
 		if err != nil {
-			log.Warn().Msgf("could not unmarshal response body: %s\n %s", err)
+			log.Warn().Msgf("could not unmarshal response body: %s", err)
 		}
 
 		for _, topic := range response.Topics {
@@ -133,4 +178,27 @@ func (a *App) getDeals(id int, firstPage int, lastPage int) []Topic {
 		}
 	}
 	return t
+}
+
+func (a *App) getRedirects() []Redirect {
+
+	requestURL := fmt.Sprintf("https://raw.githubusercontent.com/davegallant/rfd-redirect-stripper/main/redirects.json")
+	res, err := http.Get(requestURL)
+	if err != nil {
+		log.Warn().Msgf("error fetching redirects: %s\n", err)
+	}
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		log.Warn().Msgf("could not read response body: %s\n", err)
+	}
+
+	var r []Redirect
+
+	err = json.Unmarshal([]byte(body), &r)
+
+	if err != nil {
+		log.Warn().Msgf("could not unmarshal response body: %s", err)
+	}
+
+	return r
 }
