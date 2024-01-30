@@ -62,3 +62,7 @@ footer {
   background-size: contain;
   background-position-y: bottom;
 }
+
+.material-symbols-outlined {
+ font-size: medium;
+}

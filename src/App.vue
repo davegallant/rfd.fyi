@@ -5,7 +5,7 @@ import Loading from "vue-loading-overlay";
 import GithubButton from "vue-github-button";
 import { install } from "@github/hotkey";
 
-import 'vue-loading-overlay/dist/css/index.css';
+import "vue-loading-overlay/dist/css/index.css";
 
 export default {
   data() {
@@ -130,7 +130,7 @@ export default {
   <link rel="shortcut icon" type="image/png" href="/favicon.png" />
   <body>
     <input
-      class="form-control" 
+      class="form-control"
       type="text"
       id="filter"
       placeholder="Filter"
@@ -161,7 +161,7 @@ export default {
         <loading
           v-model:active="isLoading"
           color="#ccc"
-          opacity=0
+          opacity="0"
           loader="bars"
           :is-full-page="false"
         >
