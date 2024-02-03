@@ -210,9 +210,9 @@ export default {
         <small
           >Tip: Press '/' to filter and create filter links (i.e.
           <a
-            href="/#/filter=pizza"
+            href="/#/filter=costco"
             onclick="setTimeout(location.reload.bind(location), 1)"
-            >https://rfd.fyi/#/filter=pizza</a
+            >https://rfd.fyi/#/filter=costco</a
           >)</small
         >
         <div class="footer-right">
