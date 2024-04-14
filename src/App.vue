@@ -134,6 +134,7 @@ export default {
       type="text"
       id="filter"
       placeholder="Filter"
+
       data-hotkey="/"
       v-model="filter"
       v-on:keyup.enter="createFilterRoute(this.filter.toString())"
@@ -208,7 +209,7 @@ export default {
     <div v-if="!isMobile()">
       <footer class="fixed-bottom">
         <small
-          >Tip: Press '/' to filter and create filter links (i.e.
+          >Press '/' to begin filtering (i.e.
           <a
             href="/#/filter=costco"
             onclick="setTimeout(location.reload.bind(location), 1)"
