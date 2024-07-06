@@ -3,7 +3,7 @@ module github.com/davegallant/rfd-fyi
 go 1.18
 
 require (
-	github.com/dlclark/regexp2 v1.11.0
+	github.com/dlclark/regexp2 v1.11.1
 	github.com/gorilla/mux v1.8.1
 	github.com/joho/godotenv v1.5.1
 	github.com/rs/zerolog v1.33.0
