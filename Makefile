@@ -22,12 +22,12 @@ backend:
 frontend:
 	@npm install @vue/cli-service
 	@npx vue-cli-service serve
-.PHONY: server
+.PHONY: frontend
 
 ## dev: Build and run in docker compose
 dev:
 	docker compose up --build -d
-.PHONY: up
+.PHONY: dev
 
 ## prod: Run the latest images in docker compose
 prod:
@@ -35,7 +35,7 @@ prod:
 	@docker pull ghcr.io/davegallant/rfd-fyi-backend
 	@docker pull ghcr.io/davegallant/rfd-fyi-frontend
 	@docker compose -f docker-compose.prod.yml up -d
-.PHONY: up
+.PHONY: prod
 
 ## teardown: Teardown docker
 teardown:
