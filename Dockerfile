@@ -1,4 +1,4 @@
-FROM node:20.2.0-alpine3.16 as builder
+FROM node:20.2.0-alpine3.16 AS builder
 
 WORKDIR /app
 
@@ -10,7 +10,7 @@ COPY . .
 
 RUN npm run build
 
-FROM caddy:2.8.4-alpine as runtime
+FROM caddy:2.8.4-alpine AS runtime
 
 WORKDIR /my-site
 
