@@ -1,4 +1,4 @@
-# rfd-fyi
+# rfd.fyi
 
 This repository provides a simple, less-distracting overlay for hot deals posted on https://forums.redflagdeals.com.
 
