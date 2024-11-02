@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.10
+# syntax=docker/dockerfile:1.11
 FROM cgr.dev/chainguard/go:latest as build
 
 WORKDIR /src
