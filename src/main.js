@@ -1,6 +1,5 @@
 import { createApp } from "vue";
 import App from "./App.vue";
-import VueGtag from "vue-gtag";
 import { createRouter, createWebHashHistory } from "vue-router";
 
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -15,9 +14,7 @@ const router = createRouter({
   routes,
 });
 
-const app = createApp(App).use(VueGtag, {
-  config: { id: "G-YF11ZH9SYD" },
-});
+const app = createApp(App);
 
 app.use(router);
 app.mount("#app");
