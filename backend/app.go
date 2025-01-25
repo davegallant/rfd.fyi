@@ -91,12 +91,15 @@ func (a *App) refreshTopics() {
 	for {
 		log.Info().Msg("Refreshing topics")
 		latestTopics := a.getDeals(9, 1, 6)
-		latestTopics = a.updateScores(latestTopics)
 
-		log.Info().Msg("Refreshing redirects")
-		latestRedirects := a.getRedirects()
-		a.Redirects = latestRedirects
-		a.CurrentTopics = a.stripRedirects(latestTopics)
+		if len(latestTopics) > 0 {
+			latestTopics = a.updateScores(latestTopics)
+
+			log.Info().Msg("Refreshing redirects")
+			latestRedirects := a.getRedirects()
+			a.Redirects = latestRedirects
+			a.CurrentTopics = a.stripRedirects(latestTopics)
+		}
 
 		a.LastRefresh = time.Now()
 		rand.Seed(time.Now().UnixNano())
