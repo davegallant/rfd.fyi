@@ -213,12 +213,12 @@ export default {
           <a
             href="/#/filter=costco"
             onclick="setTimeout(location.reload.bind(location), 1)"
-            >https://rfd.fyi/#/filter=costco</a
+            >/#/filter=costco</a
           >)</small
         >
         <div class="footer-right">
           <github-button href="https://github.com/davegallant/rfd-fyi"
-            >Star</github-button
+            ></github-button
           >
         </div>
       </footer>
