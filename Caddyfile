@@ -1,5 +1,8 @@
-rfd.fyi
+rfd.davegallant.ca {
+    file_server
+    reverse_proxy /api/* backend:8080
+}
 
-file_server
-
-reverse_proxy /api/* backend:8080
+rfd.fyi {
+    redir https://rfd.davegallant.ca{uri} 301
+}
