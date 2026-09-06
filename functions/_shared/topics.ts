@@ -99,9 +99,7 @@ export async function refreshTopics(env: Env): Promise<Topic[]> {
   refreshedTopics = stripRedirects(refreshedTopics, redirects);
 
   const expiredTopics = await getDeals(env, 68, 1, REFRESHED_EXPIRED_DEALS_PAGE_COUNT + 1);
-  const expiredTopicIds = new Set(
-    expiredTopics.filter((topic) => isExpiredTopic(topic)).map((topic) => topic.topic_id),
-  );
+  const expiredTopicIds = new Set(expiredTopics.map((topic) => topic.topic_id));
   const existingTopics = (await readTopics(env)).map((topic) => compactTopic(normalizeTopic(topic)));
   const topics = deduplicateTopics([...refreshedTopics, ...existingTopics])
     .filter((topic) => !isExpiredTopic(topic) && !expiredTopicIds.has(topic.topic_id))

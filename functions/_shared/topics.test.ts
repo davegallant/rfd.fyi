@@ -36,6 +36,10 @@ function pageFromUrl(url) {
   return Number(new URL(String(url)).searchParams.get("page"));
 }
 
+function isExpiredDealsRequest(url) {
+  return new URL(String(url)).searchParams.get("forum_id") === "68";
+}
+
 describe("readTopicsJson", () => {
   it("returns stored JSON when KV has topics", async () => {
     const data = "[{\"topic_id\":1}]";
@@ -78,9 +82,10 @@ describe("refreshTopics enrichment isolation", () => {
   it("never writes to the enrichment key", async () => {
     const put = vi.fn();
     const get = vi.fn(async () => null);
-    vi.stubGlobal("fetch", vi.fn(async (url) => String(url).includes("redirects.json")
-      ? jsonResponse([])
-      : jsonResponse({ topics: [topic({ topic_id: 5 })] })));
+    vi.stubGlobal("fetch", vi.fn(async (url) => {
+      if (String(url).includes("redirects.json")) return jsonResponse([]);
+      return jsonResponse({ topics: isExpiredDealsRequest(url) ? [] : [topic({ topic_id: 5 })] });
+    }));
 
     await refreshTopics({ TOPICS_KV: { get, put } });
 
@@ -90,9 +95,10 @@ describe("refreshTopics enrichment isolation", () => {
   it("emits topics carrying only the documented API fields", async () => {
     const put = vi.fn();
     const get = vi.fn(async () => null);
-    vi.stubGlobal("fetch", vi.fn(async (url) => String(url).includes("redirects.json")
-      ? jsonResponse([])
-      : jsonResponse({ topics: [topic({ topic_id: 5 })] })));
+    vi.stubGlobal("fetch", vi.fn(async (url) => {
+      if (String(url).includes("redirects.json")) return jsonResponse([]);
+      return jsonResponse({ topics: isExpiredDealsRequest(url) ? [] : [topic({ topic_id: 5 })] });
+    }));
 
     const [refreshed] = await refreshTopics({ TOPICS_KV: { get, put } });
 
@@ -155,6 +161,36 @@ describe("refreshTopics", () => {
     });
   });
 
+  it("removes cached topics listed in Expired Deals without an expiry date", async () => {
+    const expiredTopicId = 2825014;
+    const get = vi.fn(async (key) => key === "topics.json"
+      ? JSON.stringify([topic({
+        topic_id: expiredTopicId,
+        offer: { dealer_name: "Amazon.ca", url: "", expires_at: null },
+      })])
+      : null);
+    vi.stubGlobal("fetch", vi.fn(async (url) => {
+      const requestUrl = String(url);
+      if (requestUrl.includes("redirects.json")) return jsonResponse([]);
+      if (new URL(requestUrl).searchParams.get("forum_id") === "68") {
+        return pageFromUrl(requestUrl) === 1
+          ? jsonResponse({ topics: [topic({
+            topic_id: expiredTopicId,
+            forum_id: 68,
+            offer: { dealer_name: "Amazon.ca", url: "", expires_at: null },
+          })] })
+          : jsonResponse({ topics: [] });
+      }
+      return pageFromUrl(requestUrl) === 1
+        ? jsonResponse({ topics: [topic({ topic_id: 1 })] })
+        : jsonResponse({ topics: [] });
+    }));
+
+    const refreshed = await refreshTopics({ TOPICS_KV: { get, put: vi.fn() } });
+
+    expect(refreshed.map(({ topic_id }) => topic_id)).toEqual([1]);
+  });
+
   it("refreshes all hot-deals pages and writes the newest API topics to KV", async () => {
     const target = topic({
       topic_id: 2818435,
@@ -173,6 +209,7 @@ describe("refreshTopics", () => {
     const fetchMock = vi.fn(async (url) => {
       const requestUrl = String(url);
       if (requestUrl.includes("redirects.json")) return jsonResponse([]);
+      if (isExpiredDealsRequest(requestUrl)) return jsonResponse({ topics: [] });
 
       const page = pageFromUrl(requestUrl);
       const topics = Array.from({ length: 40 }, (_, index) => topic({
@@ -211,6 +248,7 @@ describe("refreshTopics", () => {
     const fetchMock = vi.fn(async (url) => {
       const requestUrl = String(url);
       if (requestUrl.startsWith("https://redirects.example.test")) return jsonResponse([]);
+      if (isExpiredDealsRequest(requestUrl)) return jsonResponse({ topics: [] });
 
       expect(requestUrl.startsWith("https://rfd.example.test/api/topics?")).toBe(true);
       return jsonResponse({ topics: [topic({ topic_id: pageFromUrl(requestUrl) })] });
@@ -240,6 +278,7 @@ describe("refreshTopics", () => {
     vi.stubGlobal("fetch", vi.fn(async (url) => {
       const requestUrl = String(url);
       if (requestUrl.includes("redirects.json")) return jsonResponse([]);
+      if (isExpiredDealsRequest(requestUrl)) return jsonResponse({ topics: [] });
       if (pageFromUrl(requestUrl) === 2) throw new Error("network down");
       return jsonResponse({ topics: [topic({ topic_id: pageFromUrl(requestUrl) })] });
     }));
@@ -256,6 +295,7 @@ describe("refreshTopics", () => {
     vi.stubGlobal("fetch", vi.fn(async (url) => {
       const requestUrl = String(url);
       if (requestUrl.includes("redirects.json")) return jsonResponse([]);
+      if (isExpiredDealsRequest(requestUrl)) return jsonResponse({ topics: [] });
       if (pageFromUrl(requestUrl) === 2) return new Response("nope", { status: 500 });
       return jsonResponse({ topics: [topic({ topic_id: pageFromUrl(requestUrl) })] });
     }));
@@ -272,6 +312,7 @@ describe("refreshTopics", () => {
     vi.stubGlobal("fetch", vi.fn(async (url) => {
       const requestUrl = String(url);
       if (requestUrl.includes("redirects.json")) return new Response("nope", { status: 503 });
+      if (isExpiredDealsRequest(requestUrl)) return jsonResponse({ topics: [] });
       return jsonResponse({ topics: [topic({ topic_id: pageFromUrl(requestUrl) })] });
     }));
 
@@ -286,6 +327,7 @@ describe("refreshTopics", () => {
     vi.stubGlobal("fetch", vi.fn(async (url) => {
       const requestUrl = String(url);
       if (requestUrl.includes("redirects.json")) throw new Error("redirects unavailable");
+      if (isExpiredDealsRequest(requestUrl)) return jsonResponse({ topics: [] });
       return jsonResponse({ topics: [topic({ topic_id: pageFromUrl(requestUrl) })] });
     }));
 
@@ -299,6 +341,7 @@ describe("refreshTopics", () => {
     vi.stubGlobal("fetch", vi.fn(async (url) => {
       const requestUrl = String(url);
       if (requestUrl.includes("redirects.json")) return jsonResponse({ redirects: [] });
+      if (isExpiredDealsRequest(requestUrl)) return jsonResponse({ topics: [] });
       return jsonResponse({ topics: [topic({ topic_id: pageFromUrl(requestUrl) })] });
     }));
 
@@ -311,6 +354,7 @@ describe("refreshTopics", () => {
     vi.stubGlobal("fetch", vi.fn(async (url) => {
       const requestUrl = String(url);
       if (requestUrl.includes("redirects.json")) return jsonResponse([]);
+      if (isExpiredDealsRequest(requestUrl)) return jsonResponse({ topics: [] });
       if (pageFromUrl(requestUrl) !== 1) return jsonResponse({ topics: [] });
 
       return jsonResponse({ topics: [
